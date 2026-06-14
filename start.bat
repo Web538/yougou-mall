@@ -1,63 +1,65 @@
 @echo off
-chcp 65001 >nul
-title YouGou Mall - Local Development Server
+chcp 65001 >nul 2>&1
+title YouGou Mall - Server
 cd /d "%~dp0"
 cls
 
 echo.
 echo ========================================================
-echo       优购商城电商平台 - 本地开发服务器
+echo        YouGou Mall - E-commerce Platform
+echo        Local Development Server
 echo ========================================================
 echo.
 
-REM 检查 Node.js
+REM Check Node.js
 node --version >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] 未检测到 Node.js，请先安装:
+    echo [ERROR] Node.js not found. Please install from:
     echo         https://nodejs.org/
     echo.
     pause
     exit /b 1
 )
-echo [OK] Node.js 已安装: 
+echo [OK] Node.js installed:
 node --version
 
-REM 检查 npm 依赖
+REM Check npm dependencies
 if not exist "node_modules" (
-    echo [INFO] 正在安装 npm 依赖...
+    echo [INFO] Installing npm dependencies...
     call npm install
     if errorlevel 1 (
-        echo [ERROR] npm install 失败
+        echo [ERROR] npm install failed
         pause
         exit /b 1
     )
+    echo [OK] Dependencies installed
 )
 
 echo.
-echo [INFO] 正在启动后端 API 服务器 (端口: 3000)...
-echo [INFO] 访问地址: http://localhost:3000/
+echo [INFO] Starting backend server on port 3000...
+echo [INFO] Access: http://localhost:3000/
 echo.
 
-REM 启动 Node.js 服务器（后台运行）
-start "YouGou Mall Server" cmd /k "node server/index.js"
+REM Start Node.js server in new window
+start "YouGou Mall Server" cmd /k "cd /d "%~dp0" && node server/index.js"
 
-REM 等待服务器启动
+REM Wait for server startup
 timeout /t 3 /nobreak >nul
 
-REM 打开浏览器
-echo [INFO] 正在打开浏览器...
+REM Open browser
+echo [INFO] Opening browser...
 start "" "http://localhost:3000/"
 
 echo.
 echo ========================================================
-echo   API 服务:   http://localhost:3000/api
-echo   前端页面:   http://localhost:3000/
-echo   项目目录:   %~dp0
+echo   API Service:   http://localhost:3000/api
+echo   Frontend:      http://localhost:3000/
+echo   Project Dir:   %~dp0
 echo.
-echo   提示:
-echo   - 请勿关闭弹出的命令行窗口
-echo   - 关闭命令行窗口即可停止服务器
+echo   Tips:
+echo   - Do NOT close the server window
+echo   - Close the server window to stop the service
 echo ========================================================
 echo.
-echo 按任意键关闭此窗口（服务器继续运行）...
+echo Press any key to close this window (server keeps running)...
 pause >nul
