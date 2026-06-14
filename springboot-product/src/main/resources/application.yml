@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: yougou-product-service
+
+  # 数据源配置（请根据本地 MySQL 实际情况修改）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yougou_product?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root123
+
+  # SQL 输出日志
+  sql:
+    init:
+      mode: never
+
+  # 404 接口不存在时抛出 NoHandlerFoundException（由全局异常处理器统一处理）
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+# MyBatis Plus 配置
+mybatis-plus:
+  # mapper.xml 文件路径
+  mapper-locations: classpath*:mapper/**/*.xml
+  # 实体类扫描包
+  type-aliases-package: com.yougou.product.entity
+  # 全局配置
+  global-config:
+    db-config:
+      id-type: auto               # 主键自增
+      logic-delete-field: deleted  # 逻辑删除字段
+      logic-delete-value: 1       # 删除值
+      logic-not-delete-value: 0   # 未删除值
+  # 打印 SQL 日志（开发环境开启，生产环境关闭）
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+# 服务端口
+server:
+  port: 8080
+
+# 日志配置
+logging:
+  level:
+    com.yougou.product: DEBUG
+    com.baomidou.mybatisplus: INFO

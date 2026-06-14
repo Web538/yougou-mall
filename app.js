@@ -5,18 +5,18 @@
 
 // ========== 商品数据 ==========
 const products = [
-  { id: 1, name: "Apple iPhone 15 Pro 256GB", category: "手机数码", price: 7999, originalPrice: 8999, icon: "📱", rating: 4.8, sales: 12580, description: "搭载A17 Pro芯片，钛金属机身，专业级摄影系统，支持USB 3.0高速传输。", specs: ["A17 Pro 处理器", "6.1英寸 Super Retina XDR", "48MP 主摄系统", "256GB 存储空间", "钛金属机身设计"] },
-  { id: 2, name: "Sony WH-1000XM5 无线降噪耳机", category: "手机数码", price: 2299, originalPrice: 2899, icon: "🎧", rating: 4.9, sales: 8920, description: "业界领先的降噪技术，30小时续航，舒适轻量设计，高解析度音频。", specs: ["业界领先降噪", "30小时超长续航", "高解析度音频", "多点连接", "轻量舒适设计"] },
-  { id: 3, name: "MacBook Air M3 13英寸 笔记本电脑", category: "电脑办公", price: 8999, originalPrice: 9999, icon: "💻", rating: 4.9, sales: 6540, description: "Apple M3芯片，轻薄便携，长达18小时电池续航，Liquid Retina显示屏。", specs: ["Apple M3 芯片", "13.6英寸 Liquid Retina", "18小时电池续航", "仅1.24kg", "静音无风扇设计"] },
+  { id: 1, name: "Apple iPhone 15 Pro 256GB", category: "手机数码", price: 7999, originalPrice: 8999, icon: "📱", rating: 4.8, sales: 12580, description: "搭载A17 Pro芯片，钛金属机身，专业级摄影系统，支持USB 3.0高速传输。", specs: ["A17 Pro 处理器", "6.1英寸 Super Retina XDR", "48MP 主摄系统", "256GB 存储空间", "钛金属机身设计"], promotions: [{ type: 'flash', label: '限时秒杀', discount: 1000 }, { type: 'coupon', label: '满5000减500', discount: 500 }], promotionEndTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() },
+  { id: 2, name: "Sony WH-1000XM5 无线降噪耳机", category: "手机数码", price: 2299, originalPrice: 2899, icon: "🎧", rating: 4.9, sales: 8920, description: "业界领先的降噪技术，30小时续航，舒适轻量设计，高解析度音频。", specs: ["业界领先降噪", "30小时超长续航", "高解析度音频", "多点连接", "轻量舒适设计"], promotions: [{ type: 'discount', label: '热卖直降', discount: 600 }], promotionEndTime: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString() },
+  { id: 3, name: "MacBook Air M3 13英寸 笔记本电脑", category: "电脑办公", price: 8999, originalPrice: 9999, icon: "💻", rating: 4.9, sales: 6540, description: "Apple M3芯片，轻薄便携，长达18小时电池续航，Liquid Retina显示屏。", specs: ["Apple M3 芯片", "13.6英寸 Liquid Retina", "18小时电池续航", "仅1.24kg", "静音无风扇设计"], promotions: [{ type: 'newuser', label: '新用户专享', discount: 500 }], promotionEndTime: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString() },
   { id: 4, name: "Nike Air Jordan 1 High OG 运动鞋", category: "运动户外", price: 1299, originalPrice: 1599, icon: "👟", rating: 4.7, sales: 15230, description: "经典高帮设计，优质皮革鞋面，Air气垫缓震，潮流百搭款式。", specs: ["优质皮革鞋面", "Air气垫缓震", "经典高帮设计", "耐磨橡胶外底", "潮流配色"] },
-  { id: 5, name: "Dyson V15 Detect 无绳吸尘器", category: "家居生活", price: 4690, originalPrice: 5490, icon: "🧹", rating: 4.8, sales: 4280, description: "激光探测灰尘，智能感应吸力，60分钟续航，强劲吸力。", specs: ["激光灰尘探测", "智能感应技术", "60分钟续航", "HEPA过滤系统", "多种清洁刷头"] },
+  { id: 5, name: "Dyson V15 Detect 无绳吸尘器", category: "家居生活", price: 4690, originalPrice: 5490, icon: "🧹", rating: 4.8, sales: 4280, description: "激光探测灰尘，智能感应吸力，60分钟续航，强劲吸力。", specs: ["激光灰尘探测", "智能感应技术", "60分钟续航", "HEPA过滤系统", "多种清洁刷头"], promotions: [{ type: 'group', label: '拼团立减', discount: 800 }], promotionEndTime: new Date(Date.now() + 36 * 60 * 60 * 1000).toISOString() },
   { id: 6, name: "Levi's 501 原创直筒牛仔裤", category: "服饰鞋包", price: 599, originalPrice: 799, icon: "👖", rating: 4.6, sales: 23560, description: "经典501款式，100%棉质面料，经典五口袋设计，百搭舒适。", specs: ["100%棉质面料", "经典直筒版型", "五口袋设计", "纽扣门襟", "经典水洗工艺"] },
-  { id: 7, name: "Apple Watch Series 9 GPS 45mm", category: "手机数码", price: 2999, originalPrice: 3499, icon: "⌚", rating: 4.8, sales: 9870, description: "全新S9芯片，双指互点操作，精准健康监测，全天候显示。", specs: ["S9 SiP 芯片", "45mm 全天候显示", "双指互点操作", "精准健康监测", "ECG 心电图"] },
+  { id: 7, name: "Apple Watch Series 9 GPS 45mm", category: "手机数码", price: 2999, originalPrice: 3499, icon: "⌚", rating: 4.8, sales: 9870, description: "全新S9芯片，双指互点操作，精准健康监测，全天候显示。", specs: ["S9 SiP 芯片", "45mm 全天候显示", "双指互点操作", "精准健康监测", "ECG 心电图"], promotions: [{ type: 'flash', label: '618特惠', discount: 500, highlight: true }], promotionEndTime: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString() },
   { id: 8, name: "Nintendo Switch OLED 游戏主机", category: "手机数码", price: 2299, originalPrice: 2599, icon: "🎮", rating: 4.9, sales: 11230, description: "7英寸OLED屏幕，鲜艳色彩显示，随时随地畅玩游戏，64GB存储。", specs: ["7英寸 OLED 屏幕", "64GB 存储空间", "加宽可调支架", "增强型底座", "长效电池"] },
-  { id: 9, name: "小米米家扫地机器人 Pro", category: "家居生活", price: 2499, originalPrice: 2999, icon: "🤖", rating: 4.7, sales: 18650, description: "LDS激光导航，4000Pa强劲吸力，智能避障，APP远程控制。", specs: ["LDS 激光导航", "4000Pa 强劲吸力", "智能避障", "APP 远程控制", "自动回充"] },
-  { id: 10, name: "雅诗兰黛小棕瓶精华 50ml", category: "美妆护肤", price: 950, originalPrice: 1180, icon: "💄", rating: 4.9, sales: 28900, description: "经典修护精华，二裂酵母配方，改善肌肤状态，淡化细纹。", specs: ["50ml 大容量", "二裂酵母配方", "深层修护", "淡化细纹", "改善肤质"] },
+  { id: 9, name: "小米米家扫地机器人 Pro", category: "家居生活", price: 2499, originalPrice: 2999, icon: "🤖", rating: 4.7, sales: 18650, description: "LDS激光导航，4000Pa强劲吸力，智能避障，APP远程控制。", specs: ["LDS 激光导航", "4000Pa 强劲吸力", "智能避障", "APP 远程控制", "自动回充"], promotions: [{ type: 'discount', label: '家居节直降', discount: 500 }], promotionEndTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString() },
+  { id: 10, name: "雅诗兰黛小棕瓶精华 50ml", category: "美妆护肤", price: 950, originalPrice: 1180, icon: "💄", rating: 4.9, sales: 28900, description: "经典修护精华，二裂酵母配方，改善肌肤状态，淡化细纹。", specs: ["50ml 大容量", "二裂酵母配方", "深层修护", "淡化细纹", "改善肤质"], promotions: [{ type: 'coupon', label: '满1000减200', discount: 200 }, { type: 'flash', label: '今日特价', discount: 230 }], promotionEndTime: new Date(Date.now() + 18 * 60 * 60 * 1000).toISOString() },
   { id: 11, name: "SK-II 神仙水 230ml", category: "美妆护肤", price: 1590, originalPrice: 1890, icon: "✨", rating: 4.8, sales: 21340, description: "90%以上PITERA精华，改善肤质，提亮肤色，经典护肤水。", specs: ["230ml 容量", "90%+ PITERA", "改善肤质", "提亮肤色", "保湿修护"] },
-  { id: 12, name: "三只松鼠坚果大礼包 1588g", category: "食品饮料", price: 99, originalPrice: 158, icon: "🥜", rating: 4.6, sales: 56780, description: "9种坚果组合，新鲜烘焙，独立包装，营养健康零食首选。", specs: ["1588g 大包装", "9种坚果组合", "新鲜烘焙", "独立小包装", "营养健康"] },
+  { id: 12, name: "三只松鼠坚果大礼包 1588g", category: "食品饮料", price: 99, originalPrice: 158, icon: "🥜", rating: 4.6, sales: 56780, description: "9种坚果组合，新鲜烘焙，独立包装，营养健康零食首选。", specs: ["1588g 大包装", "9种坚果组合", "新鲜烘焙", "独立小包装", "营养健康"], promotions: [{ type: 'flash', label: '限时秒杀', discount: 59 }, { type: 'group', label: '3人拼团', discount: 30 }], promotionEndTime: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString() },
   { id: 13, name: "伊利安慕希希腊风味酸奶 200g*12盒", category: "食品饮料", price: 69, originalPrice: 89, icon: "🥛", rating: 4.7, sales: 45230, description: "希腊风味酸奶，浓郁口感，优质奶源，营养早餐好选择。", specs: ["200g*12盒", "希腊风味", "浓郁口感", "优质奶源", "营养丰富"] },
   { id: 14, name: "Kindle Paperwhite 5 电子书阅读器", category: "电脑办公", price: 998, originalPrice: 1299, icon: "📚", rating: 4.8, sales: 7890, description: "6.8英寸墨水屏，防水设计，可调色温，续航长达数周。", specs: ["6.8英寸墨水屏", "防水设计 (IPX8)", "可调色温", "8GB 存储", "数周续航"] },
   { id: 15, name: "Under Armour 运动T恤 男士", category: "运动户外", price: 249, originalPrice: 349, icon: "👕", rating: 4.6, sales: 12450, description: "速干透气面料，运动剪裁，舒适贴身，适合各种运动。", specs: ["速干透气面料", "运动剪裁", "舒适贴身", "吸汗排湿", "多种颜色"] },
@@ -35,11 +35,12 @@ const products = [
 const categories = ["全部", "手机数码", "电脑办公", "家居生活", "服饰鞋包", "美妆护肤", "运动户外", "食品饮料"];
 
 // ========== 状态管理 ==========
+// 购物车状态统一由 Store（类 Pinia）管理，此处仅同步引用
 let state = {
   currentView: 'home',
   currentCategory: '全部',
   searchKeyword: '',
-  cart: JSON.parse(localStorage.getItem('cart') || '[]'),
+  cart: Store.getCart(),       // 从 Pinia 风格的 Store 获取
   orders: [],
   currentProduct: null,
   checkoutQuantity: 1,
@@ -247,7 +248,20 @@ async function handlePasswordSubmit(event) {
 }
 
 // ========== 导航函数 ==========
+// 合法路由白名单（用于 404 检测）
+const VALID_ROUTES = ['home', 'product', 'cart', 'checkout', 'orders', 'profile', 'order-success'];
+
 function navigate(view) {
+  // ---- 404 检测：无效路由跳转到 404 页面 ----
+  if (VALID_ROUTES.indexOf(view) === -1) {
+    state.currentView = '404';
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target404 = document.getElementById('view-404');
+    if (target404) target404.classList.add('active');
+    window.scrollTo(0, 0);
+    return;
+  }
+
   // 未登录用户访问需要登录的页面
   if ((view === 'checkout' || view === 'orders' || view === 'profile') && !Store.isLoggedIn()) {
     showToast('请先登录', '');
@@ -267,6 +281,7 @@ function navigate(view) {
     loadProfile();
     showProfileTab('info');
   }
+  // 下单成功页无需额外渲染（页面内容由 submitOrder() 填充）
   
   window.scrollTo(0, 0);
 }
@@ -346,15 +361,28 @@ function renderProducts() {
 }
 
 // ========== 商品详情 ==========
+/**
+ * 商品详情页 - 父组件
+ * 向子组件（PromotionLabel / Countdown）传值：
+ *   - product.promotions     -> PromotionLabel.renderList()
+ *   - product.promotionEndTime -> Countdown.renderTo()
+ */
 function showProductDetail(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
-  
+
   state.currentProduct = product;
   state.checkoutQuantity = 1;
   navigate('product');
-  
+
   const container = document.getElementById('productDetail');
+
+  // ---- 子组件 1: 促销标签（父组件向子组件传 promotions） ----
+  const promoLabels = product.promotions && product.promotions.length > 0
+    ? PromotionLabel.renderList(product.promotions)   // 将商品的 promotions 数组传给子组件
+    : '';
+
+  // ---- 主渲染 ----
   container.innerHTML = `
     <div class="detail-container">
       <div class="detail-image">${product.icon}</div>
@@ -367,6 +395,13 @@ function showProductDetail(productId) {
           <span class="original-price">¥${product.originalPrice}</span>
           <span class="discount">省¥${product.originalPrice - product.price}</span>
         </div>
+
+        <!-- 子组件挂载点：促销标签（由父组件传值 product.promotions 给子组件渲染） -->
+        ${promoLabels}
+
+        <!-- 子组件挂载点：倒计时（容器 ID 供后续 Countdown.renderTo() 绑定定时器） -->
+        <div id="promotionCountdown"></div>
+
         <div class="detail-description">${product.description}</div>
         <div class="detail-specs">
           <h3>📋 商品规格</h3>
@@ -387,6 +422,24 @@ function showProductDetail(productId) {
       </div>
     </div>
   `;
+
+  // ---- 子组件 2: 倒计时（父组件向子组件传 promotionEndTime 和主题样式） ----
+  if (product.promotionEndTime) {
+    const firstPromo = product.promotions && product.promotions[0];
+    const title = firstPromo ? `距离 ${firstPromo.label} 结束` : '距离促销结束';
+    const theme = firstPromo && firstPromo.type === 'flash' ? 'red'
+      : firstPromo && firstPromo.type === 'group' ? 'blue'
+      : 'orange';
+
+    // 父组件向子组件 Countdown 传 props（结束时间/标题/主题/尺寸）
+    Countdown.renderTo({
+      endTime: product.promotionEndTime,
+      title: title,
+      theme: theme,
+      size: 'medium',
+      showIcon: true
+    }, '#promotionCountdown');
+  }
 }
 
 function changeQuantity(delta) {
@@ -534,7 +587,7 @@ function renderCart() {
     <div class="cart-summary">
       <div class="cart-summary-left">
         共 ${totalQty} 件商品
-        <button style="margin-left: 15px; padding: 6px 14px; border: 1px solid #ddd; background: #fff; border-radius: 15px; cursor: pointer; color: #666;" onclick="if(confirm('确定清空购物车？'))clearCart()">清空购物车</button>
+        <button class="cart-clear-btn" onclick="if(confirm('确定清空购物车？'))clearCart()">清空购物车</button>
       </div>
       <div class="cart-summary-right">
         <div style="font-size: 14px; color: #666;">合计：</div>
@@ -667,9 +720,15 @@ async function submitOrder() {
   
   const paymentLabels = { alipay: '支付宝', wechat: '微信支付', card: '银行卡', cod: '货到付款' };
   
+  // ---- 计算订单总价（用于在成功页面展示）----
+  const orderItems = state.cart.map(item => ({ productId: item.productId, quantity: item.quantity }));
+  const orderSubtotal = getCartTotal();
+  const orderShipping = orderSubtotal >= 99 ? 0 : 10;
+  const orderTotal = orderSubtotal + orderShipping;
+  
   try {
     const res = await API.createOrder({
-      items: state.cart.map(item => ({ productId: item.productId, quantity: item.quantity })),
+      items: orderItems,
       shipping: { name, phone, region, address },
       payment: paymentLabels[payment],
       note
@@ -680,10 +739,62 @@ async function submitOrder() {
     updateCartBadge();
     
     showToast('订单提交成功！', 'success');
-    navigate('orders');
+    
+    // ---- 跳转到下单成功页（而不是订单列表） ----
+    renderOrderSuccess({
+      orderId: res.data.orderId,
+      total: orderTotal,
+      payment: paymentLabels[payment],
+      shippingName: name,
+      shippingPhone: phone,
+      shippingAddress: (region ? region + ' ' : '') + address
+    });
+    navigate('order-success');
   } catch (err) {
     showToast(err.message, 'error');
   }
+}
+
+// ========== 下单成功页渲染 ==========
+function renderOrderSuccess(orderInfo) {
+  const container = document.getElementById('orderSuccessContent');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="order-success-card">
+      <div class="order-success-icon">✓</div>
+      <h2 class="order-success-title">下单成功！</h2>
+      <p class="order-success-subtitle">感谢您的购买，我们将尽快为您发货</p>
+
+      <div class="order-success-details">
+        <div class="success-detail-row">
+          <span class="detail-label">订单编号</span>
+          <span class="detail-value">${orderInfo.orderId}</span>
+        </div>
+        <div class="success-detail-row">
+          <span class="detail-label">支付金额</span>
+          <span class="detail-value price">¥${orderInfo.total.toFixed(2)}</span>
+        </div>
+        <div class="success-detail-row">
+          <span class="detail-label">支付方式</span>
+          <span class="detail-value">${orderInfo.payment}</span>
+        </div>
+        <div class="success-detail-row">
+          <span class="detail-label">收货人</span>
+          <span class="detail-value">${orderInfo.shippingName} · ${orderInfo.shippingPhone}</span>
+        </div>
+        <div class="success-detail-row">
+          <span class="detail-label">收货地址</span>
+          <span class="detail-value">${orderInfo.shippingAddress}</span>
+        </div>
+      </div>
+
+      <div class="order-success-actions">
+        <button class="btn-primary" onclick="navigate('orders')">查看订单</button>
+        <button class="btn-secondary" onclick="navigate('home')">继续购物</button>
+      </div>
+    </div>
+  `;
 }
 
 // ========== 订单管理 ==========

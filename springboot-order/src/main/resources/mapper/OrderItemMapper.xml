@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yougou.order.mapper.OrderItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.yougou.order.entity.OrderItem">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_icon" property="productIcon"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="sku_name" property="skuName"/>
+        <result column="price" property="price"/>
+        <result column="quantity" property="quantity"/>
+        <result column="subtotal" property="subtotal"/>
+        <result column="deleted" property="deleted"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT * FROM t_order_item
+        WHERE order_id = #{orderId} AND deleted = 0
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO t_order_item (id, order_id, product_id, product_name, product_icon,
+                                  sku_id, sku_name, price, quantity, subtotal,
+                                  deleted, create_time, update_time)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.id}, #{item.orderId}, #{item.productId}, #{item.productName}, #{item.productIcon},
+             #{item.skuId}, #{item.skuName}, #{item.price}, #{item.quantity}, #{item.subtotal},
+             0, NOW(), NOW())
+        </foreach>
+    </insert>
+
+</mapper>

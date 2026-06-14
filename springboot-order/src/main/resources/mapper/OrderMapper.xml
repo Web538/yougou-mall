@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yougou.order.mapper.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.yougou.order.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="freight_amount" property="freightAmount"/>
+        <result column="pay_amount" property="payAmount"/>
+        <result column="status" property="status"/>
+        <result column="payment_method" property="paymentMethod"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="shipping_name" property="shippingName"/>
+        <result column="shipping_phone" property="shippingPhone"/>
+        <result column="shipping_province" property="shippingProvince"/>
+        <result column="shipping_city" property="shippingCity"/>
+        <result column="shipping_district" property="shippingDistrict"/>
+        <result column="shipping_address" property="shippingAddress"/>
+        <result column="remark" property="remark"/>
+        <result column="deleted" property="deleted"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT * FROM t_order
+        WHERE user_id = #{userId} AND deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByOrderNo" resultMap="BaseResultMap">
+        SELECT * FROM t_order
+        WHERE order_no = #{orderNo} AND deleted = 0
+    </select>
+
+</mapper>

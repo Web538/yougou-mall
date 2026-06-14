@@ -96,6 +96,24 @@
       <div id="cartContent" class="cart-content"></div>
     </div>
 
+    <!-- 下单成功页 -->
+    <div id="view-order-success" class="view">
+      <div id="orderSuccessContent" class="order-success-content"></div>
+    </div>
+
+    <!-- 404 页面 -->
+    <div id="view-404" class="view">
+      <div class="not-found">
+        <div class="not-found-code">4<span class="zero">0</span>4</div>
+        <h2 class="not-found-title">页面走丢了</h2>
+        <p class="not-found-desc">抱歉，您访问的页面不存在或已被移除</p>
+        <div class="not-found-actions">
+          <button class="btn-primary" onclick="navigate('home')">返回首页</button>
+          <button class="btn-secondary" onclick="history.back()">返回上一页</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 结算页 -->
     <div id="view-checkout" class="view">
       <button class="back-btn" onclick="navigate('cart')">← 返回购物车</button>
@@ -230,8 +248,24 @@
     </div>
   </div>
 
-  <script src="src/api.js"></script>
+  <!-- 异步请求模块 -->
+  <script src="src/request.js"></script>
+  <script src="src/mock.js"></script>
+  <script src="src/productApi.js"></script>
+
+  <!-- 状态管理模块 -->
   <script src="src/store.js"></script>
+
+  <!-- 子组件：促销标签 + 倒计时
+       注意：必须在 app.js 之前加载，供父组件使用 -->
+  <script src="src/components/PromotionLabel.js"></script>
+  <script src="src/components/Countdown.js"></script>
+
+  <!-- 核心业务模块 -->
+  <script src="src/api.js"></script>
   <script src="app.js"></script>
+
+  <!-- 异步增强模块（必须放在最后，拦截原有函数） -->
+  <script src="src/asyncModule.js"></script>
 </body>
 </html>

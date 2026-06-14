@@ -1,0 +1,1061 @@
+{
+  "info": {
+    "name": "优购商城 - 商品接口测试集",
+    "description": "基于 RESTful 规范的商品管理接口测试，包含正常场景、参数校验、异常处理全覆盖测试用例。\n\n测试环境：\n- 本地开发环境： http://localhost:8080\n\n接口列表：\n- POST   /products/add       新增商品\n- PUT    /products/update    更新商品\n- DELETE /products/delete    删除商品\n- DELETE /products/delete/batch 批量删除商品\n- GET    /products/query     分页查询商品列表\n- GET    /products/{id}      查询单个商品详情",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "createdProductId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. 新增商品（POST /products/add）",
+      "item": [
+        {
+          "name": "【TC-001】正常创建商品 - 必填参数完整",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('响应 code=200', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(200);",
+                  "});",
+                  "pm.test('响应 msg=操作成功', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.msg).to.eql('操作成功');",
+                  "});",
+                  "pm.test('返回商品 ID', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.have.property('id');",
+                  "    pm.collectionVariables.set('createdProductId', jsonData.data.id);",
+                  "});",
+                  "pm.test('响应时间 < 500ms', function() {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Apple iPhone 16 Pro Max 512GB\",\n    \"category\": \"手机数码\",\n    \"price\": 12999.00,\n    \"stock\": 100,\n    \"description\": \"全新A18仿生芯片，6.9英寸超视网膜XDR显示屏，钛金属边框设计\",\n    \"imageUrl\": \"https://example.com/iphone16.jpg\",\n    \"status\": 1,\n    \"sales\": 0,\n    \"rating\": 5.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-002】商品名称为空 - 触发参数校验",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('响应 code=4204（商品名称不能为空）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4204);",
+                  "});",
+                  "pm.test('提示信息包含名称不能为空', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.msg).to.include('商品名称');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"category\": \"手机数码\",\n    \"price\": 9999.00,\n    \"stock\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-003】商品价格为 0 - 触发价格校验",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4205（商品价格必须大于0）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4205);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"测试商品_价格0\",\n    \"category\": \"手机数码\",\n    \"price\": 0,\n    \"stock\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-004】商品价格为负数 - 触发价格校验",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4205', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4205);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"测试商品_价格负数\",\n    \"category\": \"手机数码\",\n    \"price\": -100.00,\n    \"stock\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-005】商品库存为负数 - 触发库存校验",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4206（商品库存不能为负数）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4206);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"测试商品_库存负数\",\n    \"category\": \"手机数码\",\n    \"price\": 99.00,\n    \"stock\": -10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-006】商品名称重复 - 触发业务异常",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4302（商品名称已存在）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4302);",
+                  "});",
+                  "pm.test('提示信息正确', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.msg).to.include('已存在');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Apple iPhone 15 Pro 256GB\",\n    \"category\": \"手机数码\",\n    \"price\": 7999.00,\n    \"stock\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-007】缺少分类字段 - 触发分类校验",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4207（商品分类不能为空）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4207);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"测试商品_缺少分类\",\n    \"price\": 99.00,\n    \"stock\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        },
+        {
+          "name": "【TC-008】JSON 格式错误 - 触发 JSON 解析异常",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4202（参数格式错误）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4202);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ invalid json: missing quotes }"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. 更新商品（PUT /products/update）",
+      "item": [
+        {
+          "name": "【TC-009】正常更新商品 - 返回成功",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('响应 code=200', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 1,\n    \"name\": \"Apple iPhone 15 Pro 256GB（已更新）\",\n    \"category\": \"手机数码\",\n    \"price\": 7599.00,\n    \"stock\": 250,\n    \"description\": \"更新后的商品描述\",\n    \"status\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "update"]
+            }
+          }
+        },
+        {
+          "name": "【TC-010】更新不存在的商品 - 触发 4301",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4301（商品不存在）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4301);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 999999,\n    \"name\": \"不存在商品\",\n    \"category\": \"分类\",\n    \"price\": 99.00,\n    \"stock\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "update"]
+            }
+          }
+        },
+        {
+          "name": "【TC-011】缺少商品 ID - 触发参数校验",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4209（商品ID不能为空）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4209);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"测试商品\",\n    \"category\": \"分类\",\n    \"price\": 99.00,\n    \"stock\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "update"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. 删除商品（DELETE /products/delete）",
+      "item": [
+        {
+          "name": "【TC-012】删除已存在的商品 - 返回成功",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('响应 code=200', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/products/delete?id={{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "delete"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{createdProductId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-013】删除不存在的商品 - 触发 4301",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4301（商品不存在）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4301);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/products/delete?id=999998",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "delete"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "999998"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-014】缺少商品 ID 参数 - 触发参数缺失",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4201（参数不能为空）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/products/delete",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "delete"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. 查询商品（GET /products/query）",
+      "item": [
+        {
+          "name": "【TC-015】默认分页查询 - 返回分页数据",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('响应 code=200', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(200);",
+                  "});",
+                  "pm.test('data 是数组', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.be.an('array');",
+                  "});",
+                  "pm.test('包含分页信息', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.page).to.have.property('current');",
+                  "    pm.expect(jsonData.page).to.have.property('size');",
+                  "    pm.expect(jsonData.page).to.have.property('total');",
+                  "    pm.expect(jsonData.page).to.have.property('pages');",
+                  "});",
+                  "pm.test('total >= 0', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.page.total).to.be.at.least(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"]
+            }
+          }
+        },
+        {
+          "name": "【TC-016】关键词搜索 - 按名称模糊查询",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('搜索结果包含 iPhone', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    var hasMatch = jsonData.data.some(function(item) {",
+                  "        return item.name && item.name.includes('iPhone');",
+                  "    });",
+                  "    pm.expect(hasMatch).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?keyword=iPhone",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "iPhone"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-017】按分类精确筛选",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('所有结果分类为手机数码', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    var allMatch = jsonData.data.every(function(item) {",
+                  "        return item.category === '手机数码';",
+                  "    });",
+                  "    pm.expect(allMatch).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?category=手机数码",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "手机数码"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-018】按状态下架筛选",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?status=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-019】按价格升序排序",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('价格升序排列', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    var prices = jsonData.data.map(function(item) { return item.price; });",
+                  "    for (var i = 0; i < prices.length - 1; i++) {",
+                  "        pm.expect(prices[i]).to.be.at.most(prices[i + 1]);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?sortBy=price&sortOrder=asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "price"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-020】按销量降序排序",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('销量降序排列', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    var sales = jsonData.data.map(function(item) { return item.sales; });",
+                  "    for (var i = 0; i < sales.length - 1; i++) {",
+                  "        pm.expect(sales[i]).to.be.at.least(sales[i + 1]);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?sortBy=sales&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "sales"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-021】自定义分页（第2页，每页5条）",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('page.current=2', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.page.current).to.eql(2);",
+                  "});",
+                  "pm.test('page.size=5', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.page.size).to.eql(5);",
+                  "});",
+                  "pm.test('data.length <= 5', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.length).to.be.at.most(5);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?current=2&size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "current",
+                  "value": "2"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-022】综合查询（关键词+分类+状态+排序）",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?keyword=iPhone&category=手机数码&status=1&sortBy=sales&sortOrder=desc&current=1&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "iPhone"
+                },
+                {
+                  "key": "category",
+                  "value": "手机数码"
+                },
+                {
+                  "key": "status",
+                  "value": "1"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "sales"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                },
+                {
+                  "key": "current",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "【TC-023】无搜索结果 - 返回空数组",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('data 是空数组', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/query?keyword=不存在商品XYZ123",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "不存在商品XYZ123"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. 查询商品详情（GET /products/{id}）",
+      "item": [
+        {
+          "name": "【TC-024】查询存在的商品 - 返回完整商品信息",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('响应 code=200', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(200);",
+                  "});",
+                  "pm.test('包含所有必需字段', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.have.property('id');",
+                  "    pm.expect(jsonData.data).to.have.property('name');",
+                  "    pm.expect(jsonData.data).to.have.property('category');",
+                  "    pm.expect(jsonData.data).to.have.property('price');",
+                  "    pm.expect(jsonData.data).to.have.property('stock');",
+                  "    pm.expect(jsonData.data).to.have.property('status');",
+                  "    pm.expect(jsonData.data).to.have.property('statusText');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "1"]
+            }
+          }
+        },
+        {
+          "name": "【TC-025】查询不存在的商品 - 触发 4301",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('响应 code=4301（商品不存在）', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.code).to.eql(4301);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/999994",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "999994"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. 异常场景测试",
+      "item": [
+        {
+          "name": "【TC-026】访问不存在的接口 - 返回 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 404', function() {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/nonexistent",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "nonexistent"]
+            }
+          }
+        },
+        {
+          "name": "【TC-027】请求方法错误（POST 查询接口）- 返回 405",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 405（方法不支持）', function() {",
+                  "    pm.response.to.have.status(405);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/products/query",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "query"]
+            }
+          }
+        },
+        {
+          "name": "【TC-028】Content-Type 错误 - 返回 415",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('状态码 415（不支持的媒体类型）', function() {",
+                  "    pm.response.to.have.status(415);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "plain text instead of json"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "add"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
